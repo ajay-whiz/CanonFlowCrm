@@ -13,32 +13,6 @@ export const useLeads = () => {
       const response = await apiClient.getLeads()
       if (response.success && response.data) {
         setLeads(response.data)
-      } else {
-        // If backend is not available, use mock data
-        setLeads([
-          {
-            id: '1',
-            name: 'John Doe',
-            email: 'john@example.com',
-            phone: '+1234567890',
-            company: 'Acme Corp',
-            status: 'new' as const,
-            notes: 'Interested in our premium package',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          },
-          {
-            id: '2',
-            name: 'Jane Smith',
-            email: 'jane@example.com',
-            phone: '+1234567891',
-            company: 'Tech Solutions',
-            status: 'contacted' as const,
-            notes: 'Follow up next week',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          },
-        ])
       }
     } catch (err) {
       // If backend is not available, use mock data
@@ -132,6 +106,7 @@ export const useLeads = () => {
   }
 
   const getLeadById = async (id: string): Promise<Lead | null> => {
+    debugger;
     try {
       const response = await apiClient.getLeadById(id)
       if (response.success && response.data) {

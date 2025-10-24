@@ -38,6 +38,7 @@ export default function LeadsPage() {
   }
 
   const handleViewLead = (id: string) => {
+    debugger;
     router.push(`/leads/${id}`)
   }
 

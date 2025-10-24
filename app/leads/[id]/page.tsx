@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
-import { LeadDetail } from '../../../../components/leads/LeadDetail'
-import { Sidebar } from '../../../../components/layout/Sidebar'
-import { Header } from '../../../../components/layout/Header'
-import { useAuth } from '../../../../hooks/useAuth'
-import { useLeads } from '../../../../hooks/useLeads'
-import { Lead } from '../../../../lib/api'
+import { LeadDetail } from '../../../components/leads/LeadDetail'
+import { Sidebar } from '../../../components/layout/Sidebar'
+import { Header } from '../../../components/layout/Header'
+import { useAuth } from '../../../hooks/useAuth'
+import { useLeads } from '../../../hooks/useLeads'
+import { Lead } from '../../../lib/api'
 
 export default function LeadDetailPage() {
   const router = useRouter()
@@ -30,12 +30,13 @@ export default function LeadDetailPage() {
     const fetchLead = async () => {
       setLoading(true)
       try {
+        debugger;
         const leadData = await getLeadById(leadId)
         if (leadData) {
           setLead(leadData)
         } else {
           // If not found in cache, try to find in leads array
-          const foundLead = leads.find(l => l.id === leadId)
+          const foundLead = leads.find((l: Lead) => l.id === leadId)
           if (foundLead) {
             setLead(foundLead)
           } else {

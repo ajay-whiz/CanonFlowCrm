@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
-import { LeadForm } from '../../../../components/leads/LeadForm'
-import { Sidebar } from '../../../../components/layout/Sidebar'
-import { Header } from '../../../../components/layout/Header'
-import { useAuth } from '../../../../hooks/useAuth'
-import { useLeads } from '../../../../hooks/useLeads'
-import { UpdateLeadRequest } from '../../../../lib/api'
+import { LeadForm } from '../../../components/leads/LeadForm'
+import { Sidebar } from '../../../components/layout/Sidebar'
+import { Header } from '../../../components/layout/Header'
+import { useAuth } from '../../../hooks/useAuth'
+import { useLeads } from '../../../hooks/useLeads'
+import { UpdateLeadRequest } from '../../../lib/api'
 
 export default function EditLeadPage() {
   const router = useRouter()

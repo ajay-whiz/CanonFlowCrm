@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8081' //|| process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8081';
 
 export interface ApiResponse<T> {
   data?: T
@@ -64,6 +64,7 @@ class ApiClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
+    debugger;
     const url = `${this.baseURL}${endpoint}`
     
     const headers: Record<string, string> = {
@@ -109,12 +110,12 @@ class ApiClient {
       }
     } catch (error) {
       // Handle CORS and network errors gracefully
-      if (error instanceof TypeError && error.message.includes('CORS')) {
-        return {
-          success: false,
-          error: 'CORS policy blocked the request. Please check server configuration.',
-        }
-      }
+      // if (error instanceof TypeError && error.message.includes('CORS')) {
+      //   return {
+      //     success: false,
+      //     error: 'CORS policy blocked the request. Please check server configuration.',
+      //   }
+      // }
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Network error',
@@ -158,6 +159,7 @@ class ApiClient {
   }
 
   async getLeadById(id: string): Promise<ApiResponse<Lead>> {
+    debugger;
     return this.request<Lead>(`/leads/${id}`)
   }
 
