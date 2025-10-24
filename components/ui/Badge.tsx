@@ -1,5 +1,5 @@
 import React from 'react'
-import { clsx } from 'clsx'
+import clsx from 'clsx'
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: 'default' | 'success' | 'warning' | 'error' | 'primary' | 'secondary'
@@ -59,7 +59,20 @@ export const Badge: React.FC<BadgeProps> = ({
 }
 
 interface StatusBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  status: 'staging' | 'approved' | 'processing' | 'paid' | 'cancelled' | 'New' | 'Contacted' | 'Qualified' | 'Lost'
+  status:
+    | 'staging'
+    | 'approved'
+    | 'processing'
+    | 'paid'
+    | 'cancelled'
+    | 'new'
+    | 'contacted'
+    | 'qualified'
+    | 'lost'
+    | 'New'
+    | 'Contacted'
+    | 'Qualified'
+    | 'Lost'
 }
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({
@@ -73,14 +86,15 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     processing: { variant: 'primary' as const, label: 'Processing' },
     paid: { variant: 'success' as const, label: 'Paid' },
     cancelled: { variant: 'error' as const, label: 'Cancelled' },
-    New: { variant: 'primary' as const, label: 'New' },
-    Contacted: { variant: 'warning' as const, label: 'Contacted' },
-    Qualified: { variant: 'success' as const, label: 'Qualified' },
-    Lost: { variant: 'error' as const, label: 'Lost' },
-  }
-  
-  const config = statusConfig[status]
-  
+    new: { variant: 'primary' as const, label: 'New' },
+    contacted: { variant: 'warning' as const, label: 'Contacted' },
+    qualified: { variant: 'success' as const, label: 'Qualified' },
+    lost: { variant: 'error' as const, label: 'Lost' },
+  } as const
+
+  const key = (typeof status === 'string' ? status.toLowerCase() : status) as keyof typeof statusConfig
+  const config = statusConfig[key] ?? { variant: 'secondary' as const, label: String(status) }
+
   return (
     <Badge variant={config.variant} className={className} {...props}>
       {config.label}

@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ''
 
 export interface ApiResponse<T> {
   data?: T
@@ -81,17 +81,21 @@ class ApiClient {
         headers,
       })
 
-      const data = await response.json()
+      let data: any = null
+      const contentType = response.headers.get('content-type') || ''
+      if (contentType.includes('application/json')) {
+        data = await response.json()
+      }
 
       if (!response.ok) {
         return {
           success: false,
-          error: data.message || 'An error occurred',
+          error: (data && (data.message || data.error)) || `HTTP ${response.status}`,
         }
       }
 
       // Handle backend response format: { status, message, data }
-      if (data.status !== undefined) {
+      if (data && data.status !== undefined) {
         return {
           success: data.status,
           data: data.data,
@@ -101,7 +105,7 @@ class ApiClient {
 
       return {
         success: true,
-        data,
+        data: data as any,
       }
     } catch (error) {
       // Handle CORS and network errors gracefully

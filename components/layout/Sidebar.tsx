@@ -90,10 +90,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onToggle()
                   }}
                   className={`
-                    w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors
+                    w-full flex items-center space-x-3 px-3 py-2 rounded-r-lg text-left transition-colors border-l-2
                     ${isActive 
-                      ? 'bg-primary-100 text-primary-700 border-r-2 border-primary-600' 
-                      : 'text-secondary-600 hover:bg-secondary-100 hover:text-secondary-900'
+                      ? 'bg-primary-100 text-primary-700 border-primary-600' 
+                      : 'text-secondary-600 hover:bg-secondary-100 hover:text-secondary-900 border-transparent'
                     }
                   `}
                 >
