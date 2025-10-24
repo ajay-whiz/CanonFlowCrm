@@ -77,6 +77,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
   label?: string
   error?: string
   helperText?: string
+  leftIcon?: React.ReactNode
   variant?: 'default' | 'error'
 }
 
@@ -84,6 +85,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
   label,
   error,
   helperText,
+  leftIcon,
   variant = 'default',
   className,
   id,
@@ -105,16 +107,24 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
           {label}
         </label>
       )}
-      <textarea
-        ref={ref}
-        id={textareaId}
-        className={clsx(
-          baseClasses,
-          variantClasses[variant],
-          className
+      <div className="relative">
+        {leftIcon && (
+          <div className="absolute left-3 top-3 text-secondary-400">
+            {leftIcon}
+          </div>
         )}
-        {...props}
-      />
+        <textarea
+          ref={ref}
+          id={textareaId}
+          className={clsx(
+            baseClasses,
+            variantClasses[variant],
+            leftIcon && 'pl-10',
+            className
+          )}
+          {...props}
+        />
+      </div>
       {error && (
         <p className="mt-1 text-sm text-error-600">{error}</p>
       )}
