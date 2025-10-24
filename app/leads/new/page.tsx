@@ -57,7 +57,7 @@ export default function NewLeadPage() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary-50">
+    <div className="min-h-screen bg-secondary-50 flex">
       <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -65,7 +65,7 @@ export default function NewLeadPage() {
         onNavigate={handleNavigate}
       />
       
-      <div className="lg:pl-64">
+      <div>
         <Header
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
           title="New Lead"

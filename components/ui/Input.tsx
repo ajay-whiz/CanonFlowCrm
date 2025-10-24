@@ -1,5 +1,5 @@
 import React from 'react'
-import { clsx } from 'clsx'
+import clsx from 'clsx'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -80,7 +80,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
   variant?: 'default' | 'error'
 }
 
-export const Textarea: React.FC<TextareaProps> = ({
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(({
   label,
   error,
   helperText,
@@ -88,7 +88,7 @@ export const Textarea: React.FC<TextareaProps> = ({
   className,
   id,
   ...props
-}) => {
+}, ref) => {
   const textareaId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`
   
   const baseClasses = 'flex min-h-[80px] w-full rounded-md border bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-secondary-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
@@ -106,6 +106,7 @@ export const Textarea: React.FC<TextareaProps> = ({
         </label>
       )}
       <textarea
+        ref={ref}
         id={textareaId}
         className={clsx(
           baseClasses,
@@ -122,4 +123,6 @@ export const Textarea: React.FC<TextareaProps> = ({
       )}
     </div>
   )
-}
+})
+
+Textarea.displayName = 'Textarea'

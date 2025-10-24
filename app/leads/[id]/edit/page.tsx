@@ -102,7 +102,7 @@ export default function EditLeadPage() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary-50">
+    <div className="min-h-screen bg-secondary-50 flex">
       <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -110,7 +110,7 @@ export default function EditLeadPage() {
         onNavigate={handleNavigate}
       />
       
-      <div className="lg:pl-64">
+      <div>
         <Header
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
           title="Edit Lead"

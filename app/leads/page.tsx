@@ -61,7 +61,7 @@ export default function LeadsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary-50">
+    <div className="min-h-screen bg-secondary-50 flex">
       <Sidebar
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
@@ -69,7 +69,7 @@ export default function LeadsPage() {
         onNavigate={handleNavigate}
       />
       
-      <div className="lg:pl-64">
+      <div>
         <Header
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
           title="Leads"

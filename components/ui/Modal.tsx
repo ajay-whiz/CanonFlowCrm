@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { clsx } from 'clsx'
+import clsx from 'clsx'
 import { X } from 'lucide-react'
 import { Button } from './Button'
 
