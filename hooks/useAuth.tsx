@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, createContext, useContext } from 'react'
 import { apiClient, LoginRequest, LoginResponse } from '../lib/api'
 
@@ -20,7 +22,7 @@ export const useAuth = () => {
   return context
 }
 
-export const useAuthState = () => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<LoginResponse['user'] | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -57,7 +59,7 @@ export const useAuthState = () => {
     apiClient.logout()
   }
 
-  return {
+  const value = {
     user,
     token,
     login,
@@ -65,6 +67,8 @@ export const useAuthState = () => {
     loading,
     isAuthenticated: !!user && !!token,
   }
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export { AuthContext }

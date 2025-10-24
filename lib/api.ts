@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8081'
+const API_BASE_URL = 'http://localhost:3000'
 
 export interface ApiResponse<T> {
   data?: T
@@ -66,9 +66,9 @@ class ApiClient {
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseURL}${endpoint}`
     
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...options.headers,
+      ...(options.headers as Record<string, string>),
     }
 
     if (this.token) {
@@ -87,6 +87,15 @@ class ApiClient {
         return {
           success: false,
           error: data.message || 'An error occurred',
+        }
+      }
+
+      // Handle backend response format: { status, message, data }
+      if (data.status !== undefined) {
+        return {
+          success: data.status,
+          data: data.data,
+          message: data.message,
         }
       }
 
