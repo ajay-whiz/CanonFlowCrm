@@ -128,7 +128,6 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify(credentials),
     })
-
     if (response.success && response.data) {
       this.token = response.data.token
       if (typeof window !== 'undefined') {
