@@ -11,8 +11,8 @@ import { Card, CardHeader, CardContent } from '../ui/Card'
 import { useAuth } from '../../hooks/useAuth'
 
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  password: z.string().min(1, 'Password is required'),
 })
 
 type LoginFormData = z.infer<typeof loginSchema>

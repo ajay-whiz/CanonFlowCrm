@@ -40,6 +40,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (credentials: LoginRequest): Promise<boolean> => {
     try {
+      // Mock authentication for demo purposes
+      if (credentials.email === 'admin@example.com' && credentials.password === 'yourpassword123') {
+        const mockUser = { id: '1', email: 'admin@example.com', name: 'Admin User' }
+        const mockToken = 'mock-jwt-token-' + Date.now()
+        
+        setUser(mockUser)
+        setToken(mockToken)
+        apiClient.setToken(mockToken)
+        return true
+      }
+      
+      // Try real API call as fallback
       const response = await apiClient.login(credentials)
       if (response.success && response.data) {
         setUser(response.data.user)

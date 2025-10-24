@@ -104,6 +104,13 @@ class ApiClient {
         data,
       }
     } catch (error) {
+      // Handle CORS and network errors gracefully
+      if (error instanceof TypeError && error.message.includes('CORS')) {
+        return {
+          success: false,
+          error: 'CORS policy blocked the request. Please check server configuration.',
+        }
+      }
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Network error',
