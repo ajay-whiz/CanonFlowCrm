@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setToken(storedToken)
       apiClient.setToken(storedToken)
       // You might want to validate the token here
-      setUser({ id: '1', email: 'admin@example.com' }) // Mock user for now
+      //setUser({ id: '1', email: 'admin@example.com' }) // Mock user for now
     }
     setLoading(false)
   }, [])

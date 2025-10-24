@@ -106,7 +106,6 @@ export const useLeads = () => {
   }
 
   const getLeadById = async (id: string): Promise<Lead | null> => {
-    debugger;
     try {
       const response = await apiClient.getLeadById(id)
       if (response.success && response.data) {

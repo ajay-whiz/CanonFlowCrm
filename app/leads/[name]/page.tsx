@@ -7,18 +7,19 @@ import { Sidebar } from '../../../components/layout/Sidebar'
 import { Header } from '../../../components/layout/Header'
 import { useAuth } from '../../../hooks/useAuth'
 import { useLeads } from '../../../hooks/useLeads'
-import { Lead } from '../../../lib/api'
+import { Lead, apiClient } from '../../../lib/api'
 
-export default function LeadDetailPage() {
+export default function LeadDetailByNamePage() {
   const router = useRouter()
   const params = useParams()
   const { isAuthenticated, loading: authLoading } = useAuth()
-  const { leads, getLeadById, deleteLead } = useLeads()
+  const { leads, fetchLeads, deleteLead } = useLeads()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [lead, setLead] = useState<Lead | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const leadId = params.id as string
+  const rawName = params.name as string
+  const leadName = decodeURIComponent(rawName)
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -27,33 +28,35 @@ export default function LeadDetailPage() {
   }, [isAuthenticated, authLoading, router])
 
   useEffect(() => {
-    const fetchLead = async () => {
+    const resolveByName = async () => {
       setLoading(true)
       try {
-        const leadData = await getLeadById(leadId)
-        if (leadData) {
-          setLead(leadData)
-        } else {
-          // If not found in cache, try to find in leads array
-          const foundLead = leads.find((l: Lead) => l.id === leadId)
-          if (foundLead) {
-            setLead(foundLead)
-          } else {
-            router.push('/leads')
+        // 1) Try from current state
+        let found = leads.find((l: Lead) => (l.name || '').toLowerCase() === leadName.toLowerCase()) || null
+        // 2) Fallback to API fetch if not found
+        if (!found) {
+          const res = await apiClient.getLeads()
+          if (res.success && res.data) {
+            found = res.data.find((l: Lead) => (l.name || '').toLowerCase() === leadName.toLowerCase()) || null
           }
         }
+        if (found) {
+          setLead(found)
+        } else {
+          router.push('/leads')
+        }
       } catch (error) {
-        console.error('Error fetching lead:', error)
+        console.error('Error resolving lead by name:', error)
         router.push('/leads')
       } finally {
         setLoading(false)
       }
     }
 
-    if (leadId) {
-      fetchLead()
+    if (leadName) {
+      resolveByName()
     }
-  }, [leadId, getLeadById, leads, router])
+  }, [leadName, leads, router])
 
   if (authLoading || loading) {
     return (
@@ -79,12 +82,12 @@ export default function LeadDetailPage() {
   }
 
   const handleEdit = () => {
-    router.push(`/leads/${leadId}/edit`)
+    router.push(`/leads/${encodeURIComponent(lead.name)}/edit`)
   }
 
   const handleDelete = async () => {
     if (confirm('Are you sure you want to delete this lead?')) {
-      const success = await deleteLead(leadId)
+      const success = await deleteLead(lead.id)
       if (success) {
         router.push('/leads')
       }
@@ -96,8 +99,7 @@ export default function LeadDetailPage() {
   }
 
   const handleStatusChange = async (status: string) => {
-    // This would typically call an API to update the lead status
-    console.log('Status change:', leadId, status)
+    console.log('Status change:', lead.id, status)
   }
 
   const handleNavigate = (path: string) => {

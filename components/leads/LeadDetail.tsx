@@ -34,6 +34,16 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({
   onBack,
   onStatusChange,
 }) => {
+  const safeFormatDate = (value?: string, fmt: string = 'MMM dd, yyyy') => {
+    if (!value) return 'N/A'
+    const d = new Date(value)
+    if (isNaN(d.getTime())) return 'N/A'
+    try {
+      return format(d, fmt)
+    } catch {
+      return 'N/A'
+    }
+  }
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'new':
@@ -82,7 +92,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({
           <div>
             <h1 className="text-2xl font-bold text-secondary-900">{lead.name}</h1>
             <p className="text-secondary-600">
-              Created on {format(new Date(lead.created_at), 'MMM dd, yyyy')}
+              Created on {safeFormatDate(lead.created_at, 'MMM dd, yyyy')}
             </p>
           </div>
         </div>
@@ -173,9 +183,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({
                     <label className="text-sm font-medium text-secondary-500">Last Updated</label>
                     <div className="flex items-center space-x-2 mt-1">
                       <Calendar className="h-4 w-4 text-secondary-400" />
-                      <span className="text-secondary-900">
-                        {format(new Date(lead.updated_at), 'MMM dd, yyyy HH:mm')}
-                      </span>
+                      <span className="text-secondary-900">{safeFormatDate(lead.updated_at, 'MMM dd, yyyy HH:mm')}</span>
                     </div>
                   </div>
                 </div>
@@ -255,16 +263,12 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({
                 
                 <div>
                   <label className="text-sm font-medium text-secondary-500">Created</label>
-                  <p className="text-sm text-secondary-900">
-                    {format(new Date(lead.created_at), 'MMM dd, yyyy')}
-                  </p>
+                  <p className="text-sm text-secondary-900">{safeFormatDate(lead.created_at, 'MMM dd, yyyy')}</p>
                 </div>
                 
                 <div>
                   <label className="text-sm font-medium text-secondary-500">Last Updated</label>
-                  <p className="text-sm text-secondary-900">
-                    {format(new Date(lead.updated_at), 'MMM dd, yyyy')}
-                  </p>
+                  <p className="text-sm text-secondary-900">{safeFormatDate(lead.updated_at, 'MMM dd, yyyy')}</p>
                 </div>
               </div>
             </CardContent>

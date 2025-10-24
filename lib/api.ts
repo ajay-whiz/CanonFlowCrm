@@ -64,7 +64,6 @@ class ApiClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
-    debugger;
     const url = `${this.baseURL}${endpoint}`
     
     const headers: Record<string, string> = {
@@ -159,7 +158,6 @@ class ApiClient {
   }
 
   async getLeadById(id: string): Promise<ApiResponse<Lead>> {
-    debugger;
     return this.request<Lead>(`/leads/${id}`)
   }
 
