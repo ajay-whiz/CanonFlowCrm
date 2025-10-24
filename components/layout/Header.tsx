@@ -17,8 +17,8 @@ export const Header: React.FC<HeaderProps> = ({
   onSearch,
 }) => {
   return (
-    <header className="bg-white border-b border-secondary-200 px-4 py-4 lg:px-6">
-      <div className="flex items-center justify-between">
+    <header className="bg-white border-b border-secondary-200 px-4 lg:px-6 h-16 flex items-center">
+      <div className="w-full flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Button
             variant="outline"
@@ -50,14 +50,14 @@ export const Header: React.FC<HeaderProps> = ({
             icon={<Bell className="h-4 w-4" />}
             className="relative"
           >
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-error-500 rounded-full"></span>
+            <span className="absolute top-0 right-0 h-3 w-3 bg-error-500 rounded-full translate-x-1/3 -translate-y-1/3"></span>
           </Button>
 
           <div className="flex items-center space-x-2">
             <div className="h-8 w-8 bg-primary-100 rounded-full flex items-center justify-center">
               <User className="h-4 w-4 text-primary-600" />
             </div>
-            <div className="hidden md:block">
+            <div className="hidden md:block leading-tight">
               <p className="text-sm font-medium text-secondary-900">Admin</p>
               <p className="text-xs text-secondary-500">admin@example.com</p>
             </div>
