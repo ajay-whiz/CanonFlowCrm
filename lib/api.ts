@@ -60,6 +60,7 @@ class ApiClient {
   private inflight = new Map<string, Promise<ApiResponse<any>>>()
   private cache = new Map<string, { ts: number; value: ApiResponse<any> }>()
   private cacheTTLms = 3000
+  private onUnauthorized?: () => void
 
   constructor(baseURL: string = API_BASE_URL) {
     this.baseURL = baseURL
@@ -93,6 +94,12 @@ class ApiClient {
       }
 
       if (!response.ok) {
+        if (response.status === 401) {
+          try { this.logout() } catch {}
+          if (this.onUnauthorized) {
+            try { this.onUnauthorized() } catch {}
+          }
+        }
         return {
           success: false,
           error: (data && (data.message || data.error)) || `HTTP ${response.status}`,
@@ -167,6 +174,11 @@ class ApiClient {
     if (typeof window !== 'undefined') {
       localStorage.setItem('auth_token', token)
     }
+  }
+
+  // Allow apps to react to 401s (e.g., clear session and redirect)
+  public setUnauthorizedHandler(handler: () => void): void {
+    this.onUnauthorized = handler
   }
 
   // Leads API
