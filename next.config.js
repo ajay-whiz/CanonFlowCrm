@@ -25,16 +25,9 @@ const nextConfig = {
     NEXT_PUBLIC_BACKEND_PORT: BACKEND_PORT,
   },
   async rewrites() {
-    return [
-      {
-        source: '/auth/:path*',
-        destination: `http://localhost:${BACKEND_PORT}/auth/:path*`,
-      },
-      {
-        source: '/leads/:path*',
-        destination: `http://localhost:${BACKEND_PORT}/leads/:path*`,
-      },
-    ]
+    // Important: Do not rewrite app routes like /leads/* to backend.
+    // API calls should use absolute backend URL via api client.
+    return []
   },
 }
 

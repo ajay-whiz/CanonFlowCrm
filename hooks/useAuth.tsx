@@ -29,33 +29,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem('auth_token')
+    const storedUser = localStorage.getItem('auth_user')
     if (storedToken) {
       setToken(storedToken)
-      apiClient.setToken(storedToken)
-      // You might want to validate the token here
-      //setUser({ id: '1', email: 'admin@example.com' }) // Mock user for now
+      apiClient.setToken(storedToken);
+    }
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser))
+      } catch {}
     }
     setLoading(false)
   }, [])
 
   const login = async (credentials: LoginRequest): Promise<boolean> => {
     try {
-      // Mock authentication for demo purposes
-      // if (credentials.email === 'admin@example.com' && credentials.password === 'yourpassword123') {
-      //   const mockUser = { id: '1', email: 'admin@example.com', name: 'Admin User' }
-      //   const mockToken = 'mock-jwt-token-' + Date.now()
-        
-      //   setUser(mockUser)
-      //   setToken(mockToken)
-      //   apiClient.setToken(mockToken)
-      //   return true
-      // }
-      
-      // Try real API call as fallback
       const response = await apiClient.login(credentials)
       if (response.success && response.data) {
         setUser(response.data.user)
         setToken(response.data.token)
+        try { localStorage.setItem('auth_user', JSON.stringify(response.data.user)) } catch {}
         return true
       }
       return false
@@ -69,6 +62,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null)
     setToken(null)
     apiClient.logout()
+    try { localStorage.removeItem('auth_user') } catch {}
   }
 
   const value = {

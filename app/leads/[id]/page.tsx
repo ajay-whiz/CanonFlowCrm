@@ -1,24 +1,25 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { LeadDetail } from '../../../components/leads/LeadDetail'
 import { Sidebar } from '../../../components/layout/Sidebar'
 import { Header } from '../../../components/layout/Header'
 import { useAuth } from '../../../hooks/useAuth'
 import { useLeads } from '../../../hooks/useLeads'
-import { Lead } from '../../../lib/api'
+import { Lead, apiClient } from '../../../lib/api'
 
 export default function LeadDetailPage() {
   const router = useRouter()
   const params = useParams()
   const { isAuthenticated, loading: authLoading } = useAuth()
-  const { leads, getLeadById, deleteLead } = useLeads()
+  const { leads, getLeadById, deleteLead } = useLeads(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [lead, setLead] = useState<Lead | null>(null)
   const [loading, setLoading] = useState(true)
 
   const leadId = params.id as string
+  const didFetchRef = useRef(false)
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -27,6 +28,8 @@ export default function LeadDetailPage() {
   }, [isAuthenticated, authLoading, router])
 
   useEffect(() => {
+    if (didFetchRef.current) return
+    didFetchRef.current = true
     const fetchLead = async () => {
       setLoading(true)
       try {
@@ -39,7 +42,18 @@ export default function LeadDetailPage() {
           if (foundLead) {
             setLead(foundLead)
           } else {
-            router.push('/leads')
+            // Fallback: fetch all leads and find by id
+            const res = await apiClient.getLeads()
+            if (res.success && res.data) {
+              const fetched = res.data.find((l: Lead) => l.id === leadId) || null
+              if (fetched) {
+                setLead(fetched)
+              } else {
+                router.push('/leads')
+              }
+            } else {
+              router.push('/leads')
+            }
           }
         }
       } catch (error) {
@@ -53,7 +67,7 @@ export default function LeadDetailPage() {
     if (leadId) {
       fetchLead()
     }
-  }, [leadId, getLeadById, leads, router])
+  }, [leadId])
 
   if (authLoading || loading) {
     return (

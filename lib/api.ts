@@ -1,4 +1,7 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8081';
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  `http://localhost:${process.env.NEXT_PUBLIC_BACKEND_PORT || '8081'}`;
 
 export interface ApiResponse<T> {
   data?: T
@@ -54,6 +57,9 @@ export interface UpdateLeadRequest {
 class ApiClient {
   private baseURL: string
   private token: string | null = null
+  private inflight = new Map<string, Promise<ApiResponse<any>>>()
+  private cache = new Map<string, { ts: number; value: ApiResponse<any> }>()
+  private cacheTTLms = 3000
 
   constructor(baseURL: string = API_BASE_URL) {
     this.baseURL = baseURL
@@ -65,7 +71,9 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     const url = `${this.baseURL}${endpoint}`
-    
+    const method = (options.method || 'GET').toUpperCase()
+    const isGet = method === 'GET'
+
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...(options.headers as Record<string, string>),
@@ -75,11 +83,8 @@ class ApiClient {
       headers.Authorization = `Bearer ${this.token}`
     }
 
-    try {
-      const response = await fetch(url, {
-        ...options,
-        headers,
-      })
+    const execFetch = async (): Promise<ApiResponse<T>> => {
+      const response = await fetch(url, { ...options, headers })
 
       let data: any = null
       const contentType = response.headers.get('content-type') || ''
@@ -103,22 +108,34 @@ class ApiClient {
         }
       }
 
-      return {
-        success: true,
-        data: data as any,
+      return { success: true, data: data as any }
+    }
+
+    try {
+      const key = isGet ? `${method}:${url}` : ''
+      const now = Date.now()
+
+      if (isGet) {
+        const cached = this.cache.get(key)
+        if (cached && now - cached.ts < this.cacheTTLms) {
+          return cached.value as ApiResponse<T>
+        }
+        const inflight = this.inflight.get(key)
+        if (inflight) {
+          return (await inflight) as ApiResponse<T>
+        }
+        const p = execFetch()
+        this.inflight.set(key, p)
+        const res = await p
+        this.inflight.delete(key)
+        this.cache.set(key, { ts: now, value: res })
+        return res as ApiResponse<T>
       }
+
+      // Non-GET: execute directly (no cache/inflight)
+      return await execFetch()
     } catch (error) {
-      // Handle CORS and network errors gracefully
-      // if (error instanceof TypeError && error.message.includes('CORS')) {
-      //   return {
-      //     success: false,
-      //     error: 'CORS policy blocked the request. Please check server configuration.',
-      //   }
-      // }
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Network error',
-      }
+      return { success: false, error: error instanceof Error ? error.message : 'Network error' }
     }
   }
 
