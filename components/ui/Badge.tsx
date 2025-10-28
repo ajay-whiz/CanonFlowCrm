@@ -90,6 +90,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     contacted: { variant: 'warning' as const, label: 'Contacted' },
     qualified: { variant: 'success' as const, label: 'Qualified' },
     lost: { variant: 'error' as const, label: 'Lost' },
+    request_from: { variant: 'secondary' as const, label: 'Request From' },
   } as const
 
   const key = (typeof status === 'string' ? status.toLowerCase() : status) as keyof typeof statusConfig

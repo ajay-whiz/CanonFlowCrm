@@ -15,7 +15,7 @@ const leadSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().optional(),
   company: z.string().optional(),
-  status: z.enum(['new', 'contacted', 'qualified', 'lost']).optional(),
+  status: z.enum(['new', 'contacted', 'qualified', 'lost', 'request_from']).optional(),
   notes: z.string().optional(),
 })
 
@@ -34,6 +34,8 @@ const statusOptions = [
   { value: 'contacted', label: 'Contacted' },
   { value: 'qualified', label: 'Qualified' },
   { value: 'lost', label: 'Lost' },
+  { value: 'request_from', label: 'Request From' },
+  
 ]
 
 export const LeadForm: React.FC<LeadFormProps> = ({

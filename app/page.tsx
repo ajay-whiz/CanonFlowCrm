@@ -41,6 +41,7 @@ export default function Dashboard() {
   const contactedLeads = leads.filter(lead => lead.status === 'contacted').length
   const qualifiedLeads = leads.filter(lead => lead.status === 'qualified').length
   const lostLeads = leads.filter(lead => lead.status === 'lost').length
+  const requestFromLeads = leads.filter(lead => lead.status === 'Request From').length
   const conversionRate = totalLeads > 0 ? (qualifiedLeads / totalLeads) * 100 : 0
 
   // Chart data
@@ -49,6 +50,7 @@ export default function Dashboard() {
     { name: 'Contacted', value: contactedLeads, color: '#F59E0B' },
     { name: 'Qualified', value: qualifiedLeads, color: '#10B981' },
     { name: 'Lost', value: lostLeads, color: '#EF4444' },
+    { name: 'Request From', value: requestFromLeads, color: '#6B7280' },
   ]
 
   const trendData = [

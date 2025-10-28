@@ -30,7 +30,7 @@ export interface Lead {
   email: string
   phone?: string
   company?: string
-  status: 'new' | 'contacted' | 'qualified' | 'lost'
+  status: 'new' | 'contacted' | 'qualified' | 'lost' | 'Request From'
   notes?: string
   created_at: string
   updated_at: string
@@ -41,7 +41,7 @@ export interface CreateLeadRequest {
   email: string
   phone?: string
   company?: string
-  status?: 'new' | 'contacted' | 'qualified' | 'lost'
+  status?: 'new' | 'contacted' | 'qualified' | 'lost' | 'Request From'
   notes?: string
 }
 
@@ -50,7 +50,7 @@ export interface UpdateLeadRequest {
   email?: string
   phone?: string
   company?: string
-  status?: 'new' | 'contacted' | 'qualified' | 'lost'
+  status?: 'new' | 'contacted' | 'qualified' | 'lost' | 'Request From'
   notes?: string
 }
 
