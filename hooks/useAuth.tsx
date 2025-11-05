@@ -64,6 +64,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(response.data.user)
         setToken(response.data.token)
         try { localStorage.setItem('auth_user', JSON.stringify(response.data.user)) } catch {}
+        try { localStorage.setItem('auth_token', response.data.token) } catch {}
+        try { apiClient.setToken(response.data.token) } catch {}
         return true
       }
       return false
@@ -78,6 +80,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setToken(null)
     apiClient.logout()
     try { localStorage.removeItem('auth_user') } catch {}
+    try { localStorage.removeItem('auth_token') } catch {}
   }
 
   const value = {
