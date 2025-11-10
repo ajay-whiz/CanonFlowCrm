@@ -35,6 +35,22 @@ export interface Lead {
   created_at: string
   updated_at: string
 }
+export interface Payment {
+  id: number;
+  amount: number;
+  currency: string;
+  status: 'paid' | 'pending' | 'failed' | string;
+  payer: string;
+  created_at?: string;
+};
+export interface PaymentList {
+  status: boolean,
+  message: string,
+  data: [
+    Payment
+  ]
+};
+
 
 export interface CreateLeadRequest {
   name: string
@@ -95,9 +111,9 @@ class ApiClient {
 
       if (!response.ok) {
         if (response.status === 401) {
-          try { this.logout() } catch {}
+          try { this.logout() } catch { }
           if (this.onUnauthorized) {
-            try { this.onUnauthorized() } catch {}
+            try { this.onUnauthorized() } catch { }
           }
         }
         return {
@@ -209,6 +225,16 @@ class ApiClient {
       method: 'DELETE',
     })
   }
+
+
+  // paymentAPI
+  async getPaymentLists(): Promise<ApiResponse<PaymentList[]>> {
+    return this.request<PaymentList[]>('/payment/list')
+  }
+  async getPaymentById(id: string): Promise<ApiResponse<Payment[]>> {
+    return this.request<Payment[]>(`/payment/view/${id}`)
+  }
+
 }
 
 export const apiClient = new ApiClient()
