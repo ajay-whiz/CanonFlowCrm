@@ -33,7 +33,7 @@ export const usePayments = (autoFetch: boolean = true) => {
         setError(null);
         try {
             const response = await apiClient.getPaymentById(id);
-            if (response.success && response.data && response.data.length > 0) {
+            if (response.success && response.data) {
                 // return response.data || []; // Return the first payment if array
                 if (!Array.isArray(response.data)) {
                     return response.data as Payment;
